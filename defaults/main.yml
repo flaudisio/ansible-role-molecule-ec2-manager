@@ -1,0 +1,18 @@
+---
+mec2_action: create
+
+# See 'vars/distros.yml' for supported distros
+mec2_distro: ubuntu1804
+
+mec2_instance_type: t3.micro
+
+mec2_ssh_port: 22
+
+# Subnet & security group
+mec2_vpc_subnet_id: ""
+mec2_security_group_name: molecule
+mec2_security_group_description: Security group for testing Molecule
+
+# KeyPair
+mec2_keypair_name: molecule-key
+mec2_keypair_local_path: ""

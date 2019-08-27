@@ -1,0 +1,108 @@
+---
+- name: Ensure required variables are valid for creation
+  assert:
+    that:
+      - mec2_vpc_subnet_id != ""
+      - mec2_keypair_local_path != ""
+
+- name: Create security group
+  ec2_group:
+    name: "{{ mec2_security_group_name }}"
+    description: "{{ mec2_security_group_description }}"
+    rules:
+      - proto: tcp
+        from_port: "{{ mec2_ssh_port }}"
+        to_port: "{{ mec2_ssh_port }}"
+        cidr_ip: 0.0.0.0/0
+      - proto: icmp
+        from_port: 8
+        to_port: -1
+        cidr_ip: 0.0.0.0/0
+    rules_egress:
+      - proto: -1
+        from_port: 0
+        to_port: 0
+        cidr_ip: 0.0.0.0/0
+
+- name: Include keypair-related tasks
+  import_tasks: keypair.yml
+
+- name: Get the EC2 AMI by distro name
+  ec2_ami_facts:
+    owners: "{{ mec2_distros[item.distro]['ami_owner'] }}"
+    filters:
+      name: "{{ mec2_distros[item.distro]['ami_name'] }}"
+  loop: "{{ molecule_yml.platforms }}"
+  register: mec2_ami_facts
+
+- name: Create Molecule instance(s)
+  ec2:
+    image: "{{
+      (mec2_ami_facts.results[platform].images | sort(attribute='creation_date', reverse=True))[0].image_id
+    }}"
+    instance_type: "{{ item.instance_type | default(mec2_instance_type) }}"
+    key_name: "{{ mec2_keypair_name }}"
+    group: "{{ mec2_security_group_name }}"
+    vpc_subnet_id: "{{ mec2_vpc_subnet_id }}"
+    assign_public_ip: true
+    instance_tags:
+      Name: "{{ item.name }}"
+      instance: "{{ item.name }}"
+      distro: "{{ item.distro }}"
+      molecule_managed: "true"
+    exact_count: 1
+    count_tag:
+      instance: "{{ item.name }}"
+    wait: true
+  loop: "{{ molecule_yml.platforms }}"
+  loop_control:
+    index_var: platform
+  register: mec2_create_instances
+  async: 7200
+  poll: 0
+
+- name: Wait for instance(s) creation to complete
+  async_status:
+    jid: "{{ item.ansible_job_id }}"
+  loop: "{{ mec2_create_instances.results }}"
+  register: mec2_ec2_jobs
+  until: mec2_ec2_jobs.finished
+  retries: 300
+
+# NOTE: mandatory configuration for Molecule to function!
+- name: Populate instance config dict
+  set_fact:
+    instance_conf_dict:
+      instance: "{{ item.instances[0].tags.instance }}"
+      address: "{{ item.instances[0].public_ip }}"
+      user: "{{ mec2_distros[item.instances[0].tags.distro]['ssh_user'] }}"
+      port: "{{ mec2_ssh_port }}"
+      identity_file: "{{ mec2_keypair_local_path }}"
+      instance_ids: "{{ item.instance_ids }}"
+  loop: "{{ mec2_ec2_jobs.results }}"
+  register: mec2_instance_config_dict
+  when: mec2_create_instances.changed
+
+- name: Convert instance config dict to a list
+  set_fact:
+    instance_conf: "{{ mec2_instance_config_dict.results | map(attribute='ansible_facts.instance_conf_dict') | list }}"
+  when: mec2_create_instances.changed
+
+- name: Dump instance config
+  copy:
+    content: "{{ instance_conf | to_json | from_json | molecule_to_yaml | molecule_header }}"
+    dest: "{{ molecule_instance_config }}"
+  when: mec2_create_instances.changed
+
+- name: Wait for SSH
+  wait_for:
+    port: "{{ mec2_ssh_port }}"
+    host: "{{ item.address }}"
+    search_regex: SSH
+    delay: 10
+    timeout: 320
+  loop: "{{ lookup('file', molecule_instance_config) | molecule_from_yaml }}"
+
+- name: Wait for boot process to finish
+  pause:
+    minutes: 1

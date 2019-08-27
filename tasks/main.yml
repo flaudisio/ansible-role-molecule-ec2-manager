@@ -1,0 +1,13 @@
+---
+- name: Ensure globally required variables are defined
+  assert:
+    that:
+      - molecule_yml is defined
+      - molecule_instance_config is defined
+      - mec2_action in ['create', 'destroy']
+
+- name: Include distro-related configuration
+  include_vars: distros.yml
+
+- name: Include selected action-related tasks
+  import_tasks: "{{ mec2_action }}/main.yml"

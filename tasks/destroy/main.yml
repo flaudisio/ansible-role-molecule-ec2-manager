@@ -1,0 +1,40 @@
+---
+- block:
+    - name: Get instances config
+      set_fact:
+        instance_conf: "{{ lookup('file', molecule_instance_config) | molecule_from_yaml }}"
+        skip_instances: false
+  rescue:
+    - name: Set an empty instance config if file is missing
+      set_fact:
+        instance_conf: {}
+        skip_instances: true
+
+- name: Destroy Molecule instance(s)
+  ec2:
+    instance_ids: "{{ item.instance_ids }}"
+    state: absent
+  loop: "{{ instance_conf | flatten(levels=1) }}"
+  register: mec2_destroy_instances
+  when: not skip_instances
+  async: 7200
+  poll: 0
+
+- name: Wait for instance(s) deletion to complete
+  async_status:
+    jid: "{{ item.ansible_job_id }}"
+  loop: "{{ mec2_destroy_instances.results }}"
+  register: mec2_ec2_jobs
+  until: mec2_ec2_jobs.finished
+  retries: 300
+
+# NOTE: mandatory configuration for Molecule to function!
+- name: Populate instance config
+  set_fact:
+    instance_conf: {}
+
+- name: Dump instance config
+  copy:
+    content: "{{ instance_conf | to_json | from_json | molecule_to_yaml | molecule_header }}"
+    dest: "{{ molecule_instance_config }}"
+  when: mec2_destroy_instances.changed

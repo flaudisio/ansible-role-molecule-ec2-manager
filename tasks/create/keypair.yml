@@ -1,0 +1,23 @@
+---
+- name: Check the presence of local keypair
+  stat:
+    path: "{{ mec2_keypair_local_path }}"
+  register: mec2_check_local_keypair
+
+- name: Delete remote keypair
+  ec2_key:
+    name: "{{ mec2_keypair_name }}"
+    state: absent
+  when: not mec2_check_local_keypair.stat.exists
+
+- name: Create EC2 keypair
+  ec2_key:
+    name: "{{ mec2_keypair_name }}"
+  register: mec2_new_keypair
+
+- name: Persist the keypair
+  copy:
+    content: "{{ mec2_new_keypair.key.private_key }}"
+    dest: "{{ mec2_keypair_local_path }}"
+    mode: 0600
+  when: mec2_new_keypair.changed
