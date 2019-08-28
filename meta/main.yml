@@ -3,7 +3,7 @@ dependencies: []
 
 galaxy_info:
   author: Mandic Cloud Solutions
-  description: "Ansible role for "
+  description: Ansible role for managing Molecule EC2 instances
   company: Mandic Cloud Solutions
   license: license (MIT)
   min_ansible_version: 2.7
