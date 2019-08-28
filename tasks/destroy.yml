@@ -1,6 +1,6 @@
 ---
 - block:
-    - name: Get instances config
+    - name: Get instance config
       set_fact:
         instance_conf: "{{ lookup('file', molecule_instance_config) | molecule_from_yaml }}"
         skip_instances: false
