@@ -29,6 +29,11 @@
   until: mec2_ec2_jobs.finished
   retries: 300
 
+- name: Delete remote keypair
+  ec2_key:
+    name: "{{ mec2_keypair_name }}"
+    state: absent
+
 # NOTE: mandatory configuration for Molecule to function!
 - name: Populate instance config
   set_fact:
