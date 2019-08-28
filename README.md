@@ -112,7 +112,6 @@ File: `<role_dir>/molecule/default/create.yml`:
   hosts: localhost
   connection: local
   gather_facts: false
-  no_log: "{{ molecule_no_log }}"
 
   roles:
     - role: molecule-ec2-manager
@@ -131,7 +130,6 @@ File: `<role_dir>/molecule/default/destroy.yml`:
   hosts: localhost
   connection: local
   gather_facts: false
-  no_log: "{{ molecule_no_log }}"
 
   roles:
     - role: molecule-ec2-manager
