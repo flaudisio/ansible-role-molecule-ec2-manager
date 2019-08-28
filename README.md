@@ -21,6 +21,13 @@ This is a non-exhaustive list of the role variables. Please see the file [`defau
 for more details.
 
 ```yaml
+mec2_aws_region: us-east-1
+```
+
+The AWS region where instances will be deployed. If not set, it will use `AWS_REGION`
+or `EC2_REGION` (in this order of precedence).
+
+```yaml
 mec2_action: create
 ```
 
@@ -123,7 +130,7 @@ $ cd /path/to/my/role
 
 $ export AWS_ACCESS_KEY_ID=<ACCESS_KEY>
 $ export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
-$ export EC2_REGION=us-east-1  # required by Ansible's 'ec2' module
+$ export EC2_REGION=us-east-1  # optional
 
 $ molecule test
 ```

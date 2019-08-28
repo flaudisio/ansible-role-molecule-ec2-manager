@@ -1,4 +1,6 @@
 ---
+mec2_aws_region: "{{ lookup('env', 'AWS_REGION') or lookup('env', 'EC2_REGION') or 'us-east-1' }}"
+
 mec2_action: create
 
 # See 'vars/distros.yml' for supported distros

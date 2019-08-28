@@ -13,6 +13,7 @@
 - name: Destroy Molecule instance(s)
   ec2:
     instance_ids: "{{ item.instance_ids }}"
+    region: "{{ mec2_aws_region }}"
     state: absent
   loop: "{{ instance_conf | flatten(levels=1) }}"
   register: mec2_destroy_instances

@@ -53,6 +53,7 @@
     exact_count: 1
     count_tag:
       instance: "{{ item.name }}"
+    region: "{{ mec2_aws_region }}"
     wait: true
   loop: "{{ molecule_yml.platforms }}"
   loop_control:
