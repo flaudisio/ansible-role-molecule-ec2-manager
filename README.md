@@ -66,7 +66,7 @@ File: `<role_dir>/molecule/default/requirements.yml`:
 ---
 - src: https://github.com/mandic-labs/ansible-role-molecule-ec2-manager.git
   scm: git
-  version: v0.0.1
+  version: master
   name: molecule-ec2-manager
 ```
 
