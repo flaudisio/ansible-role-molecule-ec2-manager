@@ -9,6 +9,8 @@
   ec2_group:
     name: "{{ mec2_security_group_name }}"
     description: "{{ mec2_security_group_description }}"
+    tags:
+      molecule-ec2-manager/managed: "1"
     rules:
       - proto: tcp
         from_port: "{{ mec2_ssh_port }}"
@@ -47,12 +49,12 @@
     assign_public_ip: true
     instance_tags:
       Name: "{{ item.name }}"
-      instance: "{{ item.name }}"
-      distro: "{{ item.distro }}"
-      molecule_managed: "true"
+      molecule-ec2-manager/managed: "1"
+      molecule-ec2-manager/instance: "{{ item.name }}"
+      molecule-ec2-manager/distro: "{{ item.distro }}"
     exact_count: 1
     count_tag:
-      instance: "{{ item.name }}"
+      molecule-ec2-manager/instance: "{{ item.name }}"
     region: "{{ mec2_aws_region }}"
     wait: true
   loop: "{{ molecule_yml.platforms }}"
@@ -74,9 +76,9 @@
 - name: Populate instance config dict
   set_fact:
     instance_conf_dict:
-      instance: "{{ item.instances[0].tags.instance }}"
+      instance: "{{ item.instances[0].tags['molecule-ec2-manager/instance'] }}"
       address: "{{ item.instances[0].public_ip }}"
-      user: "{{ mec2_distros[item.instances[0].tags.distro]['ssh_user'] }}"
+      user: "{{ mec2_distros[item.instances[0].tags['molecule-ec2-manager/distro']]['ssh_user'] }}"
       port: "{{ mec2_ssh_port }}"
       identity_file: "{{ mec2_keypair_local_path }}"
       instance_ids: "{{ item.instance_ids }}"
