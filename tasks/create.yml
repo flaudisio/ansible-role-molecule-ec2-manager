@@ -9,6 +9,7 @@
     name: "{{ mec2_security_group_name }}"
     description: "{{ mec2_security_group_description }}"
     tags:
+      Name: "{{ mec2_security_group_name }}"
       molecule-ec2-manager/managed: "1"
     rules:
       - proto: tcp
@@ -51,6 +52,7 @@
       molecule-ec2-manager/managed: "1"
       molecule-ec2-manager/instance: "{{ item.name }}"
       molecule-ec2-manager/distro: "{{ item.distro }}"
+      molecule-ec2-manager/run-uuid: "{{ mec2_molecule_run_uuid }}"
     exact_count: 1
     count_tag:
       molecule-ec2-manager/instance: "{{ item.name }}"
@@ -90,13 +92,13 @@
     instance_conf: "{{ mec2_instance_config_dict.results | map(attribute='ansible_facts.instance_conf_dict') | list }}"
   when: mec2_create_instances.changed
 
-- name: Dump instance config
+- name: Save Molecule instance config file
   copy:
     content: "{{ instance_conf | to_json | from_json | molecule_to_yaml | molecule_header }}"
     dest: "{{ molecule_instance_config }}"
   when: mec2_create_instances.changed
 
-- name: Wait for SSH
+- name: Wait SSH port become available
   wait_for:
     port: "{{ mec2_ssh_port }}"
     host: "{{ item.address }}"

@@ -14,8 +14,8 @@ mec2_ssh_port: 22
 
 # Subnet & security group
 mec2_vpc_subnet_id: ""
-mec2_security_group_name: molecule
-mec2_security_group_description: Security group for testing Molecule
+mec2_security_group_name: molecule-ec2-manager
+mec2_security_group_description: Created by Molecule EC2 Manager
 
 # Key Pair
 mec2_keypair_name_prefix: molecule-key
