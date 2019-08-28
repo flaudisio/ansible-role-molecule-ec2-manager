@@ -1,4 +1,4 @@
-# Ansible Role: Molecule EC2 Instances Manager ("MEC2")
+# Ansible Role: Molecule EC2 Manager
 
 Ansible role for managing Molecule [EC2 instances][molecule-ec2].
 
@@ -57,10 +57,10 @@ File: `<role_dir>/molecule/default/requirements.yml`:
 
 ```yaml
 ---
-- src: https://github.com/mandic-labs/ansible-role-molecule-ec2-instance.git
+- src: https://github.com/mandic-labs/ansible-role-molecule-ec2-manager.git
   scm: git
   version: v0.0.1
-  name: molecule-ec2-instance
+  name: molecule-ec2-manager
 ```
 
 ### Molecule configuration
@@ -76,7 +76,6 @@ driver:
 platforms:
   - name: instance
     distro: ubuntu1804
-    instance_type: m5.xlarge # Optional!
 # ...
 ```
 
@@ -93,7 +92,7 @@ File: `<role_dir>/molecule/default/create.yml`:
   no_log: "{{ molecule_no_log }}"
 
   roles:
-    - role: molecule-ec2-instance
+    - role: molecule-ec2-manager
       vars:
         mec2_vpc_subnet_id: subnet-123456
         mec2_keypair_local_path: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}/ssh_key"
@@ -112,7 +111,7 @@ File: `<role_dir>/molecule/default/destroy.yml`:
   no_log: "{{ molecule_no_log }}"
 
   roles:
-    - role: molecule-ec2-instance
+    - role: molecule-ec2-manager
       vars:
         mec2_action: destroy
 ```
