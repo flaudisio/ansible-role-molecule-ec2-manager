@@ -31,7 +31,7 @@ or `EC2_REGION` (in this order of precedence).
 mec2_action: create
 ```
 
-Whether to create or destroy the instance(s). Allowed values: `create`, `destroy`.
+Whether to create or destroy the instance(s). Allowed values: `prepare`, `create` or `destroy`.
 
 ```yaml
 mec2_distro: ubuntu1804
@@ -84,6 +84,22 @@ platforms:
   - name: instance
     distro: ubuntu1804
 # ...
+```
+
+### `Prepare` playbook
+
+File: `<role_dir>/molecule/default/prepare.yml`:
+
+```yaml
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+
+  roles:
+    - role: molecule-ec2-manager
+      vars:
+        mec2_action: prepare
 ```
 
 ### `Create` playbook

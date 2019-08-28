@@ -4,7 +4,7 @@
     that:
       - molecule_yml is defined
       - molecule_instance_config is defined
-      - mec2_action in ['create', 'destroy']
+      - mec2_action in ['prepare', 'create', 'destroy']
 
 - name: Include distro-related configuration
   include_vars: distros.yml

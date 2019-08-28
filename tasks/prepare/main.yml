@@ -1,0 +1,13 @@
+---
+- name: Install Python if needed
+  raw: |
+    if ! command -v python ; then
+      if command -v apt ; then
+        apt update -y && apt install -y python-minimal python-zipstream
+      else
+        echo "Fatal: neither Python or APT were found on this host. Aborting." >&2
+        exit 1
+      fi
+    fi
+  become: true
+  changed_when: false
