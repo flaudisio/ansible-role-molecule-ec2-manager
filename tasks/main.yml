@@ -10,4 +10,4 @@
   include_vars: distros.yml
 
 - name: Include selected action-related tasks
-  include_tasks: "{{ mec2_action }}/main.yml"
+  include_tasks: "{{ mec2_action }}.yml"
