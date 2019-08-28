@@ -109,4 +109,4 @@
 
 - name: Wait for boot process to finish
   pause:
-    minutes: 1
+    seconds: "{{ mec2_boot_wait_seconds }}"
