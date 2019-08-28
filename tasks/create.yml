@@ -3,7 +3,6 @@
   assert:
     that:
       - mec2_vpc_subnet_id != ""
-      - mec2_keypair_local_path != ""
 
 - name: Create security group
   ec2_group:

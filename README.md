@@ -117,7 +117,6 @@ File: `<role_dir>/molecule/default/create.yml`:
     - role: molecule-ec2-manager
       vars:
         mec2_vpc_subnet_id: subnet-123456
-        mec2_keypair_local_path: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}/ssh_key"
 ```
 
 ### `Destroy` playbook

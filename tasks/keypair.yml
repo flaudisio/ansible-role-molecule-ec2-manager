@@ -1,4 +1,13 @@
 ---
+- name: Ensure keypair local dir directory exists
+  file:
+    path: "{{ mec2_keypair_local_dir }}"
+    state: directory
+
+- name: Set keypair file path variable
+  set_fact:
+    mec2_keypair_local_path: "{{ mec2_keypair_local_dir }}/ssh_key"
+
 - name: Check the presence of local keypair
   stat:
     path: "{{ mec2_keypair_local_path }}"

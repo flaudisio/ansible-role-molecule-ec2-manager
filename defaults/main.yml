@@ -3,6 +3,8 @@ mec2_aws_region: "{{ lookup('env', 'AWS_REGION') or lookup('env', 'EC2_REGION') 
 
 mec2_action: create
 
+mec2_local_temp_dir: /tmp/molecule-ec2-manager
+
 # See 'vars/distros.yml' for supported distros
 mec2_distro: ubuntu1804
 
@@ -15,6 +17,5 @@ mec2_vpc_subnet_id: ""
 mec2_security_group_name: molecule
 mec2_security_group_description: Security group for testing Molecule
 
-# KeyPair
-mec2_keypair_name: molecule-key
-mec2_keypair_local_path: ""
+# Key Pair
+mec2_keypair_name_prefix: molecule-key

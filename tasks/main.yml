@@ -6,6 +6,19 @@
       - molecule_instance_config is defined
       - mec2_action in ['prepare', 'create', 'destroy']
 
+- name: Get Molecule state
+  set_fact:
+    mec2_molecule_state: "{{ lookup('file', lookup('env', 'MOLECULE_STATE_FILE')) | molecule_from_yaml }}"
+
+- name: Set Molecule run UUID
+  set_fact:
+    mec2_molecule_run_uuid: "{{ mec2_molecule_state.run_uuid }}"
+
+- name: Set run UUID-related variables
+  set_fact:
+    mec2_keypair_name: "{{ mec2_keypair_name_prefix + '-' + mec2_molecule_run_uuid }}"
+    mec2_keypair_local_dir: "{{ mec2_local_temp_dir }}/{{ mec2_molecule_run_uuid }}"
+
 - name: Include distro-related configuration
   include_vars: distros.yml
 
