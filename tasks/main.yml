@@ -6,16 +6,17 @@
       - molecule_instance_config is defined
       - mec2_action in ['prepare', 'create', 'destroy']
 
-- name: Get Molecule run UUID
+- name: Set run ID
   set_fact:
-    mec2_molecule_run_uuid: "{{
+    mec2_molecule_run_id: "{{
       (lookup('file', lookup('env', 'MOLECULE_STATE_FILE')) | molecule_from_yaml)['run_uuid']
+      | replace('-', '')
     }}"
 
 - name: Set keypair configuration variables
   set_fact:
-    mec2_keypair_name: "{{ mec2_keypair_name_prefix + '-' + mec2_molecule_run_uuid }}"
-    mec2_keypair_local_path: "{{ mec2_local_temp_dir }}/{{ mec2_molecule_run_uuid }}/ssh_key"
+    mec2_keypair_name: "{{ mec2_keypair_name_prefix + '-' + mec2_molecule_run_id }}"
+    mec2_keypair_local_path: "{{ mec2_local_temp_dir }}/{{ mec2_molecule_run_id }}/ssh_key"
 
 - name: Include distro configuration
   include_vars: distros.yml

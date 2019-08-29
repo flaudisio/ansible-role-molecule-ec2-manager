@@ -51,7 +51,7 @@
       molecule-ec2-manager/managed: "1"
       molecule-ec2-manager/instance: "{{ item.name }}"
       molecule-ec2-manager/distro: "{{ item.distro }}"
-      molecule-ec2-manager/run-uuid: "{{ mec2_molecule_run_uuid }}"
+      molecule-ec2-manager/run-id: "{{ mec2_molecule_run_id }}"
     exact_count: 1
     count_tag:
       molecule-ec2-manager/instance: "{{ item.name }}"
