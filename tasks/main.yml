@@ -17,7 +17,7 @@
 - name: Set keypair configuration variables
   set_fact:
     mec2_keypair_name: "{{ mec2_keypair_name_prefix + '-' + mec2_molecule_run_uuid }}"
-    mec2_keypair_local_dir: "{{ mec2_local_temp_dir }}/{{ mec2_molecule_run_uuid }}"
+    mec2_keypair_local_path: "{{ mec2_local_temp_dir }}/{{ mec2_molecule_run_uuid }}/ssh_key"
 
 - name: Include distro configuration
   include_vars: distros.yml
