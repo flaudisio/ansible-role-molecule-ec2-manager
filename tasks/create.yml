@@ -25,10 +25,10 @@
         to_port: 0
         cidr_ip: 0.0.0.0/0
 
-- name: Include keypair-related tasks
+- name: Include keypair creation tasks
   import_tasks: keypair.yml
 
-- name: Get the EC2 AMI by distro name
+- name: Get AMI ID(s) by distro name
   ec2_ami_facts:
     owners: "{{ mec2_distros[item.distro]['ami_owner'] }}"
     filters:
@@ -78,7 +78,7 @@
     instance_conf_dict:
       instance: "{{ item.instances[0].tags['molecule-ec2-manager/instance'] }}"
       address: "{{ item.instances[0].public_ip }}"
-      user: "{{ mec2_distros[item.instances[0].tags['molecule-ec2-manager/distro']]['ssh_user'] }}"
+      user: "{{ mec2_distros[item.instances[0].tags['molecule-ec2-manager/distro']].ssh_user }}"
       port: "{{ mec2_ssh_port }}"
       identity_file: "{{ mec2_keypair_local_path }}"
       instance_ids: "{{ item.instance_ids }}"

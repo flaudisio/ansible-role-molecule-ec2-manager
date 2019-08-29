@@ -1,12 +1,12 @@
 ---
-- name: Ensure globally required variables are defined
+- name: Ensure required variables are valid
   assert:
     that:
       - molecule_yml is defined
       - molecule_instance_config is defined
       - mec2_action in ['prepare', 'create', 'destroy']
 
-- name: Get Molecule state
+- name: Get Molecule run UUID
   set_fact:
     mec2_molecule_state: "{{ lookup('file', lookup('env', 'MOLECULE_STATE_FILE')) | molecule_from_yaml }}"
 
@@ -14,13 +14,13 @@
   set_fact:
     mec2_molecule_run_uuid: "{{ mec2_molecule_state.run_uuid }}"
 
-- name: Set run UUID-related variables
+- name: Set keypair configuration variables
   set_fact:
     mec2_keypair_name: "{{ mec2_keypair_name_prefix + '-' + mec2_molecule_run_uuid }}"
     mec2_keypair_local_dir: "{{ mec2_local_temp_dir }}/{{ mec2_molecule_run_uuid }}"
 
-- name: Include distro-related configuration
+- name: Include distro configuration
   include_vars: distros.yml
 
-- name: Include selected action-related tasks
+- name: Include selected action tasks
   include_tasks: "{{ mec2_action }}.yml"
