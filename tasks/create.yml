@@ -1,8 +1,7 @@
 ---
-- name: Ensure required variables are valid for creation
-  assert:
-    that:
-      - mec2_vpc_subnet_id != ""
+- name: Include VPC facts tasks if subnet ID is empty
+  import_tasks: vpc-facts.yml
+  when: mec2_vpc_subnet_id == ""
 
 - name: Create security group
   ec2_group:

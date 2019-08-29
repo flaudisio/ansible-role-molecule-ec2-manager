@@ -50,7 +50,8 @@ Default instance type. You can also set `instance_type` as a [platform configura
 mec2_vpc_subnet_id: subnet-abc1234
 ```
 
-The VPC subnet where the instance(s) will be allocated. It **must be** a public subnet!
+A VPC **public** subnet where the instance(s) will be allocated. If not set, we'll
+do our best to find a suitable subnet.
 
 ## Dependencies
 

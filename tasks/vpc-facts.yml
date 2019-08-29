@@ -1,0 +1,22 @@
+---
+- name: Get default VPC facts
+  ec2_vpc_net_facts:
+    filters:
+      isDefault: "true"
+      state: available
+  register: mec2_vpc_net_facts
+
+- name: Get subnet facts
+  ec2_vpc_subnet_facts:
+    filters:
+      vpc-id: "{{ mec2_vpc_net_facts.vpcs[0].id }}"
+  register: mec2_vpc_subnet_facts
+
+- name: Get a (hopefully) public subnet ID
+  set_fact:
+    mec2_vpc_subnet_id: "{{
+      mec2_vpc_subnet_facts.subnets
+      | selectattr('map_public_ip_on_launch', 'equalto', true)
+      | map(attribute='id')
+      | first
+    }}"
