@@ -151,9 +151,7 @@ $ molecule test
 
 ## TODO
 
-- Try to discover a suitable VPC subnet if `mec2_vpc_subnet_id` is empty
-
-- Allow concurrent executions
+- Allow launching spot instances
 
 ## License
 
