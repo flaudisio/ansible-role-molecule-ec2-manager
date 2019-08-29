@@ -16,8 +16,21 @@ mec2_ssh_port: 22
 
 # Subnet & security group
 mec2_vpc_subnet_id: ""
-mec2_security_group_name: molecule-ec2-manager
+
+mec2_security_group_name_prefix: molecule-ec2-manager
 mec2_security_group_description: Created by Molecule EC2 Manager
+
+mec2_security_group_default_rules:
+  - proto: tcp
+    from_port: "{{ mec2_ssh_port }}"
+    to_port: "{{ mec2_ssh_port }}"
+    cidr_ip: 0.0.0.0/0
+  - proto: icmp
+    from_port: 8
+    to_port: -1
+    cidr_ip: 0.0.0.0/0
+
+mec2_security_group_extra_rules: []
 
 # Boot wait time
 mec2_boot_wait_seconds: 30

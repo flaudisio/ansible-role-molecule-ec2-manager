@@ -34,6 +34,11 @@
     name: "{{ mec2_keypair_name }}"
     state: absent
 
+- name: Delete security group
+  ec2_group:
+    name: "{{ mec2_security_group_name }}"
+    state: absent
+
 # NOTE: mandatory configuration for Molecule to function!
 - name: Populate instance config
   set_fact:

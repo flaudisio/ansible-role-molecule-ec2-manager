@@ -13,10 +13,12 @@
       | replace('-', '')
     }}"
 
-- name: Set keypair configuration variables
+- name: Setup role global variables
   set_fact:
     mec2_keypair_name: "{{ mec2_keypair_name_prefix + '-' + mec2_molecule_run_id }}"
     mec2_keypair_local_path: "{{ mec2_local_temp_dir }}/{{ mec2_molecule_run_id }}/ssh_key"
+    mec2_security_group_name: "{{ mec2_security_group_name_prefix + '-' + mec2_molecule_run_id }}"
+    mec2_security_group_rules: "{{ mec2_security_group_default_rules + mec2_security_group_extra_rules }}"
 
 - name: Include distro configuration
   include_vars: distros.yml
