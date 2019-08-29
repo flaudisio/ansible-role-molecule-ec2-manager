@@ -59,21 +59,9 @@ None.
 
 ## Usage
 
-### Requirements file
+### 1. Configure Molecule
 
-File: `<role_dir>/molecule/default/requirements.yml`:
-
-```yaml
----
-- src: https://github.com/mandic-labs/ansible-role-molecule-ec2-manager.git
-  scm: git
-  version: master
-  name: molecule-ec2-manager
-```
-
-### Molecule configuration
-
-File: `<role_dir>/molecule/default/molecule.yml`:
+File **`<role_dir>/molecule/default/molecule.yml`**:
 
 ```yaml
 ---
@@ -87,9 +75,21 @@ platforms:
 # ...
 ```
 
-### `Prepare` playbook
+### 2. Create the requirements file
 
-File: `<role_dir>/molecule/default/prepare.yml`:
+File **`<role_dir>/molecule/default/requirements.yml`**:
+
+```yaml
+---
+- src: https://github.com/mandic-labs/ansible-role-molecule-ec2-manager.git
+  scm: git
+  version: master  # or 'v0.1.0', '2835d2b5', etc
+  name: molecule-ec2-manager
+```
+
+### 3. Configure Molecule playbooks
+
+File **`<role_dir>/molecule/default/prepare.yml`**:
 
 ```yaml
 ---
@@ -103,9 +103,7 @@ File: `<role_dir>/molecule/default/prepare.yml`:
         mec2_action: prepare
 ```
 
-### `Create` playbook
-
-File: `<role_dir>/molecule/default/create.yml`:
+File **`<role_dir>/molecule/default/create.yml`**:
 
 ```yaml
 ---
@@ -117,12 +115,11 @@ File: `<role_dir>/molecule/default/create.yml`:
   roles:
     - role: molecule-ec2-manager
       vars:
-        mec2_vpc_subnet_id: subnet-123456
+        mec2_action: create
+        mec2_vpc_subnet_id: subnet-123456  # Optional
 ```
 
-### `Destroy` playbook
-
-File: `<role_dir>/molecule/default/destroy.yml`:
+File **`<role_dir>/molecule/default/destroy.yml`**:
 
 ```yaml
 ---
@@ -137,14 +134,14 @@ File: `<role_dir>/molecule/default/destroy.yml`:
         mec2_action: destroy
 ```
 
-### Running Molecule
+### 5. Setup AWS credentials and run Molecule
 
 ```console
-$ cd /path/to/my/role
+$ cd "<role_dir>"
 
 $ export AWS_ACCESS_KEY_ID=<ACCESS_KEY>
 $ export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
-$ export EC2_REGION=us-east-1  # optional
+$ export EC2_REGION=us-east-1  # Optional; defaults to 'us-east-1'
 
 $ molecule test
 ```
