@@ -8,11 +8,9 @@
 
 - name: Get Molecule run UUID
   set_fact:
-    mec2_molecule_state: "{{ lookup('file', lookup('env', 'MOLECULE_STATE_FILE')) | molecule_from_yaml }}"
-
-- name: Set Molecule run UUID
-  set_fact:
-    mec2_molecule_run_uuid: "{{ mec2_molecule_state.run_uuid }}"
+    mec2_molecule_run_uuid: "{{
+      (lookup('file', lookup('env', 'MOLECULE_STATE_FILE')) | molecule_from_yaml)['run_uuid']
+    }}"
 
 - name: Set keypair configuration variables
   set_fact:
