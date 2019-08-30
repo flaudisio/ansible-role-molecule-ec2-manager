@@ -42,7 +42,7 @@
 - name: Create Molecule instance(s)
   ec2:
     image: "{{
-      (mec2_ami_facts.results[platform].images | sort(attribute='creation_date', reverse=True))[0].image_id
+      (mec2_ami_facts.results[platform_index].images | sort(attribute='creation_date', reverse=True))[0].image_id
     }}"
     instance_type: "{{ item.instance_type | default(mec2_instance_type) }}"
     key_name: "{{ mec2_keypair_name }}"
@@ -62,7 +62,7 @@
     wait: true
   loop: "{{ molecule_yml.platforms }}"
   loop_control:
-    index_var: platform
+    index_var: platform_index
   register: mec2_create_instances
   async: 7200
   poll: 0
