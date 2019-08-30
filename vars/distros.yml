@@ -10,7 +10,7 @@ mec2_distros:
     ssh_user: centos
   ubuntu1604:
     ami_owner: 099720109477
-    ami_name: ubuntu/images/hvm-ssd/ubuntu-bionic-16.04-amd64-server-*
+    ami_name: ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*
     ssh_user: ubuntu
   ubuntu1804:
     ami_owner: 099720109477
