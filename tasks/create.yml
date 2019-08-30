@@ -17,6 +17,7 @@
         to_port: 0
         cidr_ip: 0.0.0.0/0
     purge_rules: false
+    state: present
 
 - name: Include keypair creation tasks
   import_tasks: keypair.yml
