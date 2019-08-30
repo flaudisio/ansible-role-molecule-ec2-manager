@@ -8,27 +8,24 @@
       set_fact:
         instance_conf: {}
 
-- name: Get current instance IDs
-  set_fact:
-    mec2_instances: "{{ instance_conf | map(attribute='instance_ids') | list | flatten }}"
-
 - name: Send termination command to instance(s)
   ec2:
-    instance_ids: "{{ mec2_instances }}"
+    instance_ids: "{{ item }}"
     region: "{{ mec2_aws_region }}"
     state: absent
+  loop: "{{ instance_conf | map(attribute='instance_ids') | list | flatten }}"
+  register: mec2_destroy_instances
   async: 7200
   poll: 0
   when: instance_conf != {}
 
 - name: Wait for instance(s) deletion to complete
-  ec2_instance_facts:
-    instance_ids: "{{ mec2_instances }}"
-  register: mec2_ec2_instance_facts
-  until: >
-    (mec2_ec2_instance_facts.instances | map(attribute='state.name') | list | unique) == ['terminated']
-  retries: 60
-  delay: 10
+  async_status:
+    jid: "{{ item.ansible_job_id }}"
+  loop: "{{ mec2_destroy_instances.results }}"
+  register: mec2_ec2_jobs
+  until: mec2_ec2_jobs.finished
+  retries: 300
   when: instance_conf != {}
 
 - name: Delete remote keypair
