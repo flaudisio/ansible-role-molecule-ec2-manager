@@ -10,13 +10,13 @@
     tags:
       Name: "{{ mec2_security_group_name }}"
       molecule-ec2-manager/managed: "1"
-      molecule-ec2-manager/run-id: "{{ mec2_molecule_run_id }}"
-    rules: "{{ mec2_security_group_rules }}"
+    rules: "{{ mec2_security_group_default_rules + mec2_security_group_extra_rules }}"
     rules_egress:
       - proto: -1
         from_port: 0
         to_port: 0
         cidr_ip: 0.0.0.0/0
+    purge_rules: false
 
 - name: Include keypair creation tasks
   import_tasks: keypair.yml
