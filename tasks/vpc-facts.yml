@@ -18,5 +18,6 @@
       mec2_vpc_subnet_facts.subnets
       | selectattr('map_public_ip_on_launch', 'equalto', true)
       | map(attribute='id')
+      | sort
       | first
     }}"
